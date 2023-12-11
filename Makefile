@@ -31,6 +31,20 @@ OPT = -Og
 # Build path
 BUILD_DIR = build
 
+
+######################################
+# components
+######################################
+# lvgl
+LVGL_DIR_NAME = lvgl
+LVGL_DIR = Components
+include $(LVGL_DIR)/$(LVGL_DIR_NAME)/component.mk
+LVGL_SRCDIRS = $(addprefix $(LVGL_DIR)/$(LVGL_DIR_NAME)/, $(COMPONENT_SRCDIRS))
+LVGL_C_SOURCES_WILDCARD = $(addsuffix /*.c, $(LVGL_SRCDIRS))
+LVGL_C_SOURCES = $(wildcard $(LVGL_C_SOURCES_WILDCARD))
+LVGL_INCDIRS = $(addprefix -I$(LVGL_DIR)/$(LVGL_DIR_NAME)/, $(COMPONENT_ADD_INCLUDEDIRS))
+
+
 ######################################
 # source
 ######################################
@@ -56,6 +70,7 @@ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c \
 Core/Src/system_stm32f4xx.c
+C_SOURCES += $(LVGL_C_SOURCES)
 
 # ASM sources
 ASM_SOURCES =  \
@@ -117,7 +132,7 @@ C_INCLUDES =  \
 -IDrivers/STM32F4xx_HAL_Driver/Inc/Legacy \
 -IDrivers/CMSIS/Device/ST/STM32F4xx/Include \
 -IDrivers/CMSIS/Include
-
+C_INCLUDES += $(LVGL_INCDIRS)
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
@@ -187,5 +202,13 @@ clean:
 # dependencies
 #######################################
 -include $(wildcard $(BUILD_DIR)/*.d)
+
+#######################################
+# test
+#######################################
+lvgl_test:
+	@echo LVGL_SRCDIRS: $(LVGL_SRCDIRS)
+	@echo LVGL_INCDIRS: $(LVGL_INCDIRS)
+	@echo LVGL_C_SOURCES: $(LVGL_C_SOURCES)
 
 # *** EOF ***
