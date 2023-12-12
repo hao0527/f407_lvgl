@@ -46,6 +46,15 @@ LVGL_INCDIRS = $(addprefix -I$(LVGL_DIR)/$(LVGL_DIR_NAME)/, $(COMPONENT_ADD_INCL
 
 
 ######################################
+# mylibs
+######################################
+MYLIBS_DIR = Mylibs
+MYLIBS_C_SOURCES := $(shell find $(MYLIBS_DIR) -name '*.c')
+MYLIBS_H_INCLUDE := $(shell find $(MYLIBS_DIR) -name '*.h')
+MYLIBS_INCDIRS := $(addprefix -I, $(sort $(dir $(MYLIBS_H_INCLUDE))))
+
+
+######################################
 # source
 ######################################
 # C sources
@@ -71,6 +80,7 @@ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c \
 Core/Src/system_stm32f4xx.c
 C_SOURCES += $(LVGL_C_SOURCES)
+C_SOURCES += $(MYLIBS_C_SOURCES)
 
 # ASM sources
 ASM_SOURCES =  \
@@ -133,7 +143,7 @@ C_INCLUDES =  \
 -IDrivers/CMSIS/Device/ST/STM32F4xx/Include \
 -IDrivers/CMSIS/Include
 C_INCLUDES += $(LVGL_INCDIRS)
-C_INCLUDES += -IMylibs/lvgl_user
+C_INCLUDES += $(MYLIBS_INCDIRS)
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
@@ -209,7 +219,14 @@ clean:
 #######################################
 lvgl_test:
 	@echo LVGL_SRCDIRS: $(LVGL_SRCDIRS)
+	@echo 
 	@echo LVGL_INCDIRS: $(LVGL_INCDIRS)
+	@echo 
 	@echo LVGL_C_SOURCES: $(LVGL_C_SOURCES)
+
+mylibs_test:
+	@echo MYLIBS_C_SOURCES: $(MYLIBS_C_SOURCES)
+	@echo 
+	@echo MYLIBS_INCDIRS: $(MYLIBS_INCDIRS)
 
 # *** EOF ***
