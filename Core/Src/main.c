@@ -21,6 +21,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "lvgl.h"
+#include "lv_port_disp.h"
 
 /* USER CODE END Includes */
 
@@ -91,6 +93,8 @@ int main(void)
   MX_DMA_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
+  lv_init(); /* lvgl 系统初始化 */
+  lv_port_disp_init(); /* lvgl 显示接口初始化,放在 lv_init()的后面 */
 
   /* USER CODE END 2 */
 

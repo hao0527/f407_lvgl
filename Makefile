@@ -39,10 +39,8 @@ BUILD_DIR = build
 LVGL_DIR_NAME = lvgl
 LVGL_DIR = Components
 include $(LVGL_DIR)/$(LVGL_DIR_NAME)/component.mk
-LVGL_SRCDIRS = $(addprefix $(LVGL_DIR)/$(LVGL_DIR_NAME)/, $(COMPONENT_SRCDIRS))
-LVGL_C_SOURCES_WILDCARD = $(addsuffix /*.c, $(LVGL_SRCDIRS))
-LVGL_C_SOURCES = $(wildcard $(LVGL_C_SOURCES_WILDCARD))
-LVGL_INCDIRS = $(addprefix -I$(LVGL_DIR)/$(LVGL_DIR_NAME)/, $(COMPONENT_ADD_INCLUDEDIRS))
+LVGL_C_SOURCES := $(shell find $(LVGL_DIR)/$(LVGL_DIR_NAME)/src -name '*.c')
+LVGL_INCDIRS := $(addprefix -I$(LVGL_DIR)/$(LVGL_DIR_NAME)/, $(COMPONENT_ADD_INCLUDEDIRS))
 
 
 ######################################
@@ -185,13 +183,16 @@ OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(ASM_SOURCES:.s=.o)))
 vpath %.s $(sort $(dir $(ASM_SOURCES)))
 
 $(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR) 
-	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
+	@echo [CC] $<
+	@$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
 
 $(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR)
-	$(AS) -c $(CFLAGS) $< -o $@
+	@echo [AS] $<
+	@$(AS) -c $(CFLAGS) $< -o $@
 
 $(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
-	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
+	@echo [LD] $@
+	@$(CC) $(OBJECTS) $(LDFLAGS) -o $@
 	$(SZ) $@
 
 $(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
@@ -218,8 +219,6 @@ clean:
 # test
 #######################################
 lvgl_test:
-	@echo LVGL_SRCDIRS: $(LVGL_SRCDIRS)
-	@echo 
 	@echo LVGL_INCDIRS: $(LVGL_INCDIRS)
 	@echo 
 	@echo LVGL_C_SOURCES: $(LVGL_C_SOURCES)
