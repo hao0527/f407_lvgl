@@ -64,7 +64,7 @@ void st7735s_init(void)
 #endif
 	/* clang-format off */
 	lcd_init_cmd_t init_cmds[] = {
-		{ST7735_SWRESET, {0}, 0x80},         		// Software reset, 0 args, w/delay 150
+		{ST7735_SWRESET, {0}, 0x80},                // Software reset, 0 args, w/delay 150
 		{ST7735_SLPOUT, {0}, 0x80},                 // Out of sleep mode, 0 args, w/delay 500
 		{ST7735_FRMCTR1, {0x01, 0x2C, 0x2D}, 3},    // Frame rate ctrl - normal mode, 3 args: Rate = fosc/(1x2+40) * (LINE+2C+2D)
 		{ST7735_FRMCTR2, {0x01, 0x2C, 0x2D}, 3},    // Frame rate control - idle mode, 3 args:Rate = fosc/(1x2+40) * (LINE+2C+2D)
@@ -81,7 +81,7 @@ void st7735s_init(void)
 #else
  		{ST7735_INVOFF, {0}, 0},                    // set non-inverted mode
 #endif
-		{ST7735_COLMOD, {0x05}, 1},               	// set color mode, 1 arg, no delay: 16-bit color
+		{ST7735_COLMOD, {0x05}, 1},                 // set color mode, 1 arg, no delay: 16-bit color
 		{ST7735_GMCTRP1, {0x02, 0x1c, 0x07, 0x12,
 			0x37, 0x32, 0x29, 0x2d,
 			0x29, 0x25, 0x2B, 0x39,
@@ -90,7 +90,7 @@ void st7735s_init(void)
 			0x2E, 0x2C, 0x29, 0x2D,
 			0x2E, 0x2E, 0x37, 0x3F,
 			0x00, 0x00, 0x02, 0x10}, 16},           // 16 args, no delay:
-		{ST7735_NORON, {0}, TFT_INIT_DELAY},       	// Normal display on, no args, w/delay 10 ms delay
+		{ST7735_NORON, {0}, TFT_INIT_DELAY},        // Normal display on, no args, w/delay 10 ms delay
 		{ST7735_DISPON, {0}, TFT_INIT_DELAY},       // Main screen turn on, no args w/delay 100 ms delay
 		{0, {0}, 0xff}
 	};
@@ -98,6 +98,7 @@ void st7735s_init(void)
 
 	// Initialize non-SPI GPIOs DC RST
 	// 外部已经初始化过了，这里不用再初始化GPIO
+	LV_GPIO_SET(ST7735S_BL_PORT, ST7735S_BL_PIN);   // 打开背光
 
 #if ST7735S_USE_RST
 	// Reset the display

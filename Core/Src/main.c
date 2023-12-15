@@ -95,6 +95,9 @@ int main(void)
   /* USER CODE BEGIN 2 */
   lv_init(); /* lvgl 系统初始化 */
   lv_port_disp_init(); /* lvgl 显示接口初始化,放在 lv_init()的后面 */
+  lv_obj_t *label = lv_label_create(lv_scr_act());
+  lv_label_set_text(label, "Hello LVGL  :- )");
+  lv_obj_center(label);
 
   /* USER CODE END 2 */
 
@@ -106,6 +109,7 @@ int main(void)
       timestamp = HAL_GetTick();
       HAL_GPIO_TogglePin(LED0_GPIO_Port, LED0_Pin);
     }
+    lv_timer_handler();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
