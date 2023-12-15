@@ -1,3 +1,4 @@
 /MDK-ARM/*
 /build/*
 *.jdebug*
+/.vscode/*
