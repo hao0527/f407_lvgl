@@ -40,6 +40,11 @@ void disp_enable_update(void);
 void disp_disable_update(void);
 
 /**********************
+ *   GLOBAL VARIABLES
+ **********************/
+extern lv_disp_drv_t disp_drv;
+
+/**********************
  *      MACROS
  **********************/
 

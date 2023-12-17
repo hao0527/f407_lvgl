@@ -193,7 +193,7 @@ static void st7735s_send_color(void *data, uint16_t length)
 {
 	while(!lv_mcu_spiIsReady());
 	LV_GPIO_SET(ST7735S_DC_PORT, ST7735S_DC_PIN); /*Data mode*/
-	lv_mcu_spiSendData(data, length);
+	lv_mcu_spiSendColor(data, length);
 }
 
 static void st7735s_set_orientation(uint8_t orientation)
