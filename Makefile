@@ -77,6 +77,7 @@ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c \
 Core/Src/system_stm32f4xx.c
+
 C_SOURCES += $(LVGL_C_SOURCES)
 C_SOURCES += $(MYLIBS_C_SOURCES)
 
@@ -140,6 +141,7 @@ C_INCLUDES =  \
 -IDrivers/STM32F4xx_HAL_Driver/Inc/Legacy \
 -IDrivers/CMSIS/Device/ST/STM32F4xx/Include \
 -IDrivers/CMSIS/Include
+
 C_INCLUDES += $(LVGL_INCDIRS)
 C_INCLUDES += $(MYLIBS_INCDIRS)
 
