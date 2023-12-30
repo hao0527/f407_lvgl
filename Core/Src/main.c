@@ -35,6 +35,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define MODE_24L01_IS_RX (0)
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -133,7 +134,11 @@ int main(void)
 
   Ci24R1_Init();
   while(Ci24R1_Check()==1);
+#if MODE_24L01_IS_RX
   Ci24R1_RX_Mode();
+#else
+  Ci24R1_TX_Mode();
+#endif
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -143,6 +148,15 @@ int main(void)
     if (HAL_GetTick() - timestamp >= 1000) {
       timestamp = HAL_GetTick();
       HAL_GPIO_TogglePin(LED0_GPIO_Port, LED0_Pin);
+    #if MODE_24L01_IS_RX
+      if(!Ci24R1_RxPacket()) {
+        HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);    // 接收成功 闪灯提示
+      }
+    #else
+      if(TX_OK == Ci24R1_TxPacket()) {
+        HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);    // 接收成功 闪灯提示
+      }
+    #endif
     }
     lv_timer_handler();
     audio_main();

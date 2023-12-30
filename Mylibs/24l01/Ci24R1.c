@@ -181,11 +181,10 @@ void Ci24R1_TX_Mode(void)
 	Ci24R1_Write_Reg(W_REGISTER + EN_RXADDR, 0x01);                                 // 使能通道0的接收地址
 	Ci24R1_Write_Reg(W_REGISTER + FEATURE, 0x01);                                   //// 使能NO_ACK_TX
 	// Ci24R1_Write_Reg(W_REGISTER + DYNPD, 0x00);
-
-
 	Ci24R1_Write_Reg(W_REGISTER + RF_CH, 80);         // 设置RF频率为2480MHz
 	Ci24R1_Write_Reg(W_REGISTER + RF_SETUP, 0x04);    // 设置TX发射功率11dbm，1Mbps发射速率
 	Ci24R1_Write_Reg(W_REGISTER + CONFIG, 0x0e);      // TX_DS IRQ enable CRC使能，16位CRC校验，上电, PTX mode
+	Ci24R1_Write_Reg(CE_ON, 0x00);
 }
 
 void Ci24R1_Reg18_change()
