@@ -37,6 +37,7 @@ extern "C" {
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
 extern SPI_HandleTypeDef hspi1;
+extern SPI_HandleTypeDef hspi3;
 
 /* USER CODE END ET */
 
@@ -68,6 +69,8 @@ void Error_Handler(void);
 #define LCD_DC_GPIO_Port GPIOC
 #define LCD_BL_Pin GPIO_PIN_5
 #define LCD_BL_GPIO_Port GPIOC
+#define NRF_CS_Pin GPIO_PIN_15
+#define NRF_CS_GPIO_Port GPIOA
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
