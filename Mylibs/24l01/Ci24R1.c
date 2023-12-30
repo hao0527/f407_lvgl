@@ -36,6 +36,10 @@ void Ci24R1_Init(void)
 	Ci24R1_CSN_0;                      // CSN = 0
 	Ci24R1_CSN_1;                      // CSN = 1
 	// Ci24R1_SCK_0;                      // SCK = 0
+
+	extern void Ci24R1_SPI_WriteByte(uint8_t src);
+	Ci24R1_SPI_WriteByte(0);	// stm32 spi配置sck空闲低，但是初始化spi后sck为高，需要发送一次才会为低
+
 	Ci24R1_Write_Reg(SELSPI, 0x00);    // SELSPI--SPI命令，切换DATA引脚为SPI接口
 	/*模拟电容*/
 	Ci24R1_Write_Reg(W_REGISTER + EN_AA, 0x01);        // bit[7:6] 00
