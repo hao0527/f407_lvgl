@@ -19,9 +19,10 @@ void Ci24R1_SPI_WriteByte(uint8_t src)
 ***************************************************************************************************/
 uint8_t Ci24R1_SPI_ReadByte(void)
 {
-	uint8_t data;
-	HAL_SPI_Receive(&hspi3, &data, 1, 1000);
-	return data;
+	uint8_t rxData, txData = 0xff;
+	// HAL_SPI_Receive(&hspi3, &rxData, 1, 1000);
+	HAL_SPI_TransmitReceive(&hspi3, &txData, &rxData, 1, 1000);
+	return rxData;
 }
 
 /*DATA IO口初始化为输出模式*/
