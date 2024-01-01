@@ -35,7 +35,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define MODE_24L01_IS_RX (0)
+#define MODE_24L01_IS_RX (1)
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -145,7 +145,11 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    if (HAL_GetTick() - timestamp >= 1000) {
+  #if MODE_24L01_IS_RX
+    if (HAL_GetTick() - timestamp >= 1) {
+  #else
+    if (HAL_GetTick() - timestamp >= 3) {
+  #endif
       timestamp = HAL_GetTick();
       HAL_GPIO_TogglePin(LED0_GPIO_Port, LED0_Pin);
     #if MODE_24L01_IS_RX

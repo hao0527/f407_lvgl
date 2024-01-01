@@ -68,6 +68,7 @@ uint8_t Ci24R1_Check(void)
 	return 0;                // 检测到Ci24R1
 }
 
+uint32_t sendOkCnt, sendErrCnt;
 /********************************
 启动Si24R1发送一次数据
 txbuf：待发送数据首地址
@@ -82,7 +83,7 @@ uint8_t Ci24R1_TxPacket()
 	Ci24R1_Write_Reg(FLUSH_TX, 0x00);    // 清除TX FIFO的值,防止上次发射异常退出
 	Ci24R1_Write_Buf(W_TX_PAYLOAD_NOACK, user_data, TX_PLOAD_WIDTH);
 	Ci24R1_Write_Reg(CE_ON, 0x00);    // CE拉高，Ci24R1开始发射
-	HAL_Delay(10);                    // 等待数据发送完成
+	HAL_Delay(1);                    // 等待数据发送完成
 #ifdef USE_IRQ
 	Ci24R1_Write_Reg(SELIRQ, 0x00);
 	DATA_in();    // PA6切换为输入口
@@ -90,18 +91,23 @@ uint8_t Ci24R1_TxPacket()
 		;                              // 一直等待IRQ引脚被拉低（Ci24R1的IRQ低电平有效），等待发射完成
 	Ci24R1_Write_Reg(SELSPI, 0x00);    // 将DATA引脚切换为SPI功能
 #endif
+	// while(!(Ci24R1_Read_Reg(R_REGISTER + STATUS)&0x20));
 	status = Ci24R1_Read_Reg(R_REGISTER + STATUS);    // 读取状态标志
 	Ci24R1_Write_Reg(W_REGISTER + STATUS, status);    // 清除MAX_TX或TX_OK中断（标志位写1清除）
 	if (status & MAX_TX) {
 		Ci24R1_Write_Reg(FLUSH_TX, 0x00);    // 清除TX FIFO的值
+		sendErrCnt++;
 		return MAX_TX;
 	}
 	if (status & TX_OK) {
+		sendOkCnt++;
 		return TX_OK;
 	}
+	sendErrCnt++;
 	return 0xff;    // 其他原因发送失败
 }
 
+uint32_t recvCnt;
 /********************************
 启动Ci24R1接收一次数据
 rxbuf：待接收数据首地址
@@ -123,6 +129,7 @@ uint8_t Ci24R1_RxPacket()
 	if (status & RX_OK) {
 		while ((status & RX_P_NO) != 0x0e)    // 判断RX_FIFO是否为空，不为空继续读
 		{
+			recvCnt++;
 			Ci24R1_Read_Buf(R_RX_PAYLOAD, rxbuf, RX_PLOAD_WIDTH);
 			status = Ci24R1_Read_Reg(R_REGISTER + STATUS);    // 继续读状态寄存器判断RX_FIFO标志位
 		}
