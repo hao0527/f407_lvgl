@@ -125,7 +125,6 @@ uint8_t Ci24R1_RxPacket()
 	Ci24R1_Write_Reg(SELSPI, 0x00);    // 将DATA引脚切换为SPI功能
 #endif
 	status = Ci24R1_Read_Reg(R_REGISTER + STATUS);
-	Ci24R1_Write_Reg(W_REGISTER + STATUS, 0xFF);
 	if (status & RX_OK) {
 		while ((status & RX_P_NO) != 0x0e)    // 判断RX_FIFO是否为空，不为空继续读
 		{
@@ -134,6 +133,7 @@ uint8_t Ci24R1_RxPacket()
 			status = Ci24R1_Read_Reg(R_REGISTER + STATUS);    // 继续读状态寄存器判断RX_FIFO标志位
 		}
 		Ci24R1_Write_Reg(FLUSH_RX, 0x00);    // 清空RX_FIFO
+		Ci24R1_Write_Reg(W_REGISTER + STATUS, RX_OK);    // 清RX_DR
 		return 0;
 	}
 	return 1;
@@ -155,6 +155,7 @@ void Ci24R1_RX_Mode(void)
 	Ci24R1_Write_Reg(W_REGISTER + RF_CH, TX_RX_RF_FREQ);        // 设置RF频率为2400+TX_RX_RF_FREQ MHz
 	Ci24R1_Write_Reg(W_REGISTER + RX_PW_P0, RX_PLOAD_WIDTH);    // 选择通道0的有效数据宽度32字节
 	Ci24R1_Write_Reg(W_REGISTER + RF_SETUP, 0x27);              // 设置RX接收参数，11dBm发送功率，250kbps
+	// Ci24R1_Write_Reg(W_REGISTER + RF_SETUP, 0x23);              // 设置RX接收参数，3dBm发送功率，250kbps
 	Ci24R1_Write_Reg(W_REGISTER + CONFIG, 0x0f);                // 配置基本工作模式的参数，PWR_UP,EN_CRC,16BIT,接收模式
 	Ci24R1_Write_Reg(CE_ON, 0x00);                              // CE拉高，进入接收模式
 }
@@ -175,6 +176,7 @@ void Ci24R1_TX_Mode(void)
 	Ci24R1_Write_Reg(W_REGISTER + FEATURE, 0x01);                                   // 使能NO_ACK_TX
 	Ci24R1_Write_Reg(W_REGISTER + RF_CH, TX_RX_RF_FREQ);                            // 设置RF频率为2400+TX_RX_RF_FREQ MHz
 	Ci24R1_Write_Reg(W_REGISTER + RF_SETUP, 0x27);                                  // 设置TX发射参数，11dBm发送功率，250kbps
+	// Ci24R1_Write_Reg(W_REGISTER + RF_SETUP, 0x23);                                  // 设置TX发射参数，3dBm发送功率，250kbps
 	Ci24R1_Write_Reg(W_REGISTER + CONFIG, 0x0e);                                    // TX_DS IRQ enable CRC使能，16位CRC校验，上电, PTX mode
 	Ci24R1_Write_Reg(CE_ON, 0x00);
 }
