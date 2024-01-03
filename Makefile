@@ -48,6 +48,10 @@ include $(LVGL_DIR)/$(LVGL_DIR_NAME)/component.mk
 LVGL_C_SOURCES := $(call rwildcard, Components/lvgl/src, %.c %.C)
 LVGL_INCDIRS := $(addprefix -I$(LVGL_DIR)/$(LVGL_DIR_NAME)/, $(COMPONENT_ADD_INCLUDEDIRS))
 
+# adpcm
+ADPCM_DIR = Components/adpcm
+ADPCM_C_SOURCES := $(ADPCM_DIR)/adpcm-lib.c
+ADPCM_INCDIRS := -I$(ADPCM_DIR)
 
 ######################################
 # mylibs
@@ -86,6 +90,7 @@ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c \
 Core/Src/system_stm32f4xx.c
 
 C_SOURCES += $(LVGL_C_SOURCES)
+C_SOURCES += $(ADPCM_C_SOURCES)
 C_SOURCES += $(MYLIBS_C_SOURCES)
 
 # ASM sources
@@ -150,6 +155,7 @@ C_INCLUDES =  \
 -IDrivers/CMSIS/Include
 
 C_INCLUDES += $(LVGL_INCDIRS)
+C_INCLUDES += $(ADPCM_INCDIRS)
 C_INCLUDES += $(MYLIBS_INCDIRS)
 
 # compile gcc flags
