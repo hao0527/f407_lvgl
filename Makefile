@@ -11,6 +11,12 @@
 # ------------------------------------------------
 
 ######################################
+# my func
+######################################
+rwildcard = $(foreach dir, $(wildcard $1), $(call rwildcard, $(dir)/*, $2) $(filter $2, $(dir)))
+
+
+######################################
 # target
 ######################################
 TARGET = f407_lvgl
@@ -39,7 +45,7 @@ BUILD_DIR = build
 LVGL_DIR_NAME = lvgl
 LVGL_DIR = Components
 include $(LVGL_DIR)/$(LVGL_DIR_NAME)/component.mk
-LVGL_C_SOURCES := $(shell find $(LVGL_DIR)/$(LVGL_DIR_NAME)/src -name '*.c')
+LVGL_C_SOURCES := $(call rwildcard, Components/lvgl/src, %.c %.C)
 LVGL_INCDIRS := $(addprefix -I$(LVGL_DIR)/$(LVGL_DIR_NAME)/, $(COMPONENT_ADD_INCLUDEDIRS))
 
 
@@ -47,8 +53,8 @@ LVGL_INCDIRS := $(addprefix -I$(LVGL_DIR)/$(LVGL_DIR_NAME)/, $(COMPONENT_ADD_INC
 # mylibs
 ######################################
 MYLIBS_DIR = Mylibs
-MYLIBS_C_SOURCES := $(shell find $(MYLIBS_DIR) -name '*.c')
-MYLIBS_H_INCLUDE := $(shell find $(MYLIBS_DIR) -name '*.h')
+MYLIBS_C_SOURCES := $(call rwildcard, $(MYLIBS_DIR), %.c %.C)
+MYLIBS_H_INCLUDE := $(call rwildcard, $(MYLIBS_DIR), %.h %.H)
 MYLIBS_INCDIRS := $(addprefix -I, $(sort $(dir $(MYLIBS_H_INCLUDE))))
 
 
