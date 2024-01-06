@@ -23,6 +23,7 @@
 /* USER CODE BEGIN Includes */
 #include "lvgl.h"
 #include "lv_port_disp.h"
+#include "transport.h"
 
 /* USER CODE END Includes */
 
@@ -102,6 +103,12 @@ int main(void)
   lv_obj_t *label = lv_label_create(lv_scr_act());
   lv_label_set_text(label, "Hello LVGL  :- )");
   lv_obj_center(label);
+
+  timestamp = HAL_GetTick();
+  for(int i = 0; i < 100; i++){
+    transport_test();
+  }
+  volatile uint32_t diffTime = HAL_GetTick() - timestamp;
 
   /* USER CODE END 2 */
 
