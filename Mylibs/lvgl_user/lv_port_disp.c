@@ -9,6 +9,7 @@
 #include "lv_port_disp.h"
 #include <stdbool.h>
 #include "st7735s.h"
+#include "st7789.h"
 
 /*********************
  *      DEFINES
@@ -141,7 +142,8 @@ void lv_port_disp_init(void)
 /*Initialize your display and the required peripherals.*/
 static void disp_init(void)
 {
-    st7735s_init();
+    // st7735s_init();
+    st7789_init();
 }
 
 volatile bool disp_flush_enabled = true;
@@ -166,7 +168,8 @@ void disp_disable_update(void)
 static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_t * color_p)
 {
     if(disp_flush_enabled) {
-        st7735s_flush(disp_drv, area, color_p);
+        // st7735s_flush(disp_drv, area, color_p);
+        st7789_flush(disp_drv, area, color_p);
     }
 
     /*IMPORTANT!!!

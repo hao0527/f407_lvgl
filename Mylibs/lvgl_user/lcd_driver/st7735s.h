@@ -27,13 +27,6 @@ extern "C" {
 #define ST7735S_BL_PORT  LCD_BL_GPIO_Port
 #define ST7735S_BL_PIN   LCD_BL_Pin
 
-#define ST7735S_USE_RST       (1)
-#define ST7735S_INVERT_COLORS (0)
-
-#define CONFIG_LV_DISPLAY_ORIENTATION (0)
-
-#define COLSTART 2  // 根据实际屏幕调整像素偏移
-#define ROWSTART 1
 
 // Defines are taken from
 //      https://raw.githubusercontent.com/m5stack/M5StickC/master/src/utility/ST7735_Defines.h

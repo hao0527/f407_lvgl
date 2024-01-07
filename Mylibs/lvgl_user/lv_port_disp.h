@@ -18,8 +18,8 @@ extern "C" {
 /*********************
  *      DEFINES
  *********************/
-#define MY_DISP_HOR_RES    128
-#define MY_DISP_VER_RES    160
+#define MY_DISP_HOR_RES    240
+#define MY_DISP_VER_RES    240
 
 /**********************
  *      TYPEDEFS
