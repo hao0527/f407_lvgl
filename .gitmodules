@@ -1,3 +1,6 @@
 [submodule "Components/lvgl"]
 	path = Components/lvgl
 	url = https://github.com/lvgl/lvgl.git
+[submodule "Components/adpcm"]
+	path = Components/adpcm
+	url = https://github.com/hao0527/adpcm-xq.git
