@@ -225,7 +225,12 @@ void DMA1_Stream4_IRQHandler(void)
 void ADC_IRQHandler(void)
 {
   /* USER CODE BEGIN ADC_IRQn 0 */
-
+  static volatile uint32_t adcCnt;
+  static volatile uint16_t adcValue;
+  if(__HAL_ADC_GET_IT_SOURCE(&hadc1, ADC_IT_EOC) != RESET) {
+    adcCnt++;
+    adcValue = HAL_ADC_GetValue(&hadc1);
+  }
   /* USER CODE END ADC_IRQn 0 */
   HAL_ADC_IRQHandler(&hadc1);
   /* USER CODE BEGIN ADC_IRQn 1 */
