@@ -29,7 +29,8 @@ TARGET = f407_lvgl
 DEBUG = 1
 # optimization
 OPT = -Og
-
+# verbose output?
+VERBOSE = 0
 
 #######################################
 # paths
@@ -192,17 +193,29 @@ vpath %.s $(sort $(dir $(ASM_SOURCES)))
 
 $(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR) 
 	@mkdir -p $(@D)
+ifeq ($(VERBOSE), 1)
+	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(<:.c=.lst) $< -o $@
+else
 	@echo [CC] $<
 	@$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(<:.c=.lst) $< -o $@
+endif
 
 $(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR)
 	@mkdir -p $(@D)
+ifeq ($(VERBOSE), 1)
+	$(AS) -c $(CFLAGS) $< -o $@
+else
 	@echo [AS] $<
 	@$(AS) -c $(CFLAGS) $< -o $@
+endif
 
 $(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
+ifeq ($(VERBOSE), 1)
+	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
+else
 	@echo [LD] $@
 	@$(CC) $(OBJECTS) $(LDFLAGS) -o $@
+endif
 	$(SZ) $@
 
 $(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
