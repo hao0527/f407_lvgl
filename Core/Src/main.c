@@ -24,6 +24,7 @@
 #include "lvgl.h"
 #include "lv_port_disp.h"
 #include "transport.h"
+#include "audio.h"
 
 /* USER CODE END Includes */
 
@@ -43,8 +44,10 @@
 
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
+DMA_HandleTypeDef hdma_adc1;
 
 DAC_HandleTypeDef hdac;
+DMA_HandleTypeDef hdma_dac1;
 
 SPI_HandleTypeDef hspi2;
 DMA_HandleTypeDef hdma_spi2_tx;
@@ -113,18 +116,20 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM5_Init();
   /* USER CODE BEGIN 2 */
+  HAL_Delay(500); // 延时等屏幕上电
   lv_init(); /* lvgl 系统初始化 */
   lv_port_disp_init(); /* lvgl 显示接口初始化,放在 lv_init()的后面 */
   lv_obj_t *label = lv_label_create(lv_scr_act());
   lv_label_set_text(label, "Hello LVGL  :- )");
   lv_obj_center(label);
 
-  timestamp = HAL_GetTick();
-  for(int i = 0; i < 100; i++){
-    transport_test();
-  }
-  volatile uint32_t diffTime = HAL_GetTick() - timestamp;
+  // timestamp = HAL_GetTick();
+  // for(int i = 0; i < 100; i++){
+  //   transport_test();
+  // }
+  // volatile uint32_t diffTime = HAL_GetTick() - timestamp;
 
+  audio_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -136,6 +141,7 @@ int main(void)
       HAL_GPIO_TogglePin(LED0_GPIO_Port, LED0_Pin);
     }
     lv_timer_handler();
+    audio_main();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -236,7 +242,7 @@ static void MX_ADC1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN ADC1_Init 2 */
-  HAL_ADC_Start_IT(&hadc1);
+
   /* USER CODE END ADC1_Init 2 */
 
 }
@@ -359,7 +365,7 @@ static void MX_TIM3_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN TIM3_Init 2 */
-  HAL_TIM_Base_Start(&htim3);
+
   /* USER CODE END TIM3_Init 2 */
 
 }
@@ -385,14 +391,14 @@ static void MX_TIM5_Init(void)
   htim5.Instance = TIM5;
   htim5.Init.Prescaler = 0;
   htim5.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim5.Init.Period = 10000;
+  htim5.Init.Period = 8330;
   htim5.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim5.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_OC_Init(&htim5) != HAL_OK)
   {
     Error_Handler();
   }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim5, &sMasterConfig) != HAL_OK)
   {
@@ -407,7 +413,7 @@ static void MX_TIM5_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN TIM5_Init 2 */
-  HAL_TIM_OC_Start(&htim5, TIM_CHANNEL_1);
+
   /* USER CODE END TIM5_Init 2 */
 
 }
@@ -453,11 +459,18 @@ static void MX_DMA_Init(void)
 
   /* DMA controller clock enable */
   __HAL_RCC_DMA1_CLK_ENABLE();
+  __HAL_RCC_DMA2_CLK_ENABLE();
 
   /* DMA interrupt init */
   /* DMA1_Stream4_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream4_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream4_IRQn);
+  /* DMA1_Stream5_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream5_IRQn);
+  /* DMA2_Stream0_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
 
 }
 

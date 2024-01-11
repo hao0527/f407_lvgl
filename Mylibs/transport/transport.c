@@ -1,9 +1,7 @@
 #include <stdlib.h>
 #include "transport.h"
 #include "adpcm-lib.h"
-
-#define TRANSPORT_FRAME_SIZE 32                                      // 一帧传输字节数
-#define FRAME_SAMPLE_TIMES   ((TRANSPORT_FRAME_SIZE - 3) * 2 + 1)    // 一帧能传的采样次数
+#include "audio.h"
 
 /**
  * @brief 编码一帧音频
@@ -54,4 +52,20 @@ void transport_test(void)
 	for (int i = 0; i < PCM_FRAME_NUM; i++) {
 		transport_decodeAudioFrame(adpcmData[i], pcmOut[i], &rc);    // 0.0308ms @168M
 	}
+}
+
+void transport_sendAudio(const int16_t *inbuf)
+{
+	static uint8_t rc;
+	static uint8_t outbuf[TRANSPORT_FRAME_SIZE];
+	transport_encodeAudioFrame(inbuf, outbuf, rc++);
+	transport_recvAudio(outbuf);
+}
+
+void transport_recvAudio(uint8_t *inbuf)
+{
+	static uint8_t rc;
+	static int16_t outbuf[FRAME_SAMPLE_TIMES];
+	transport_decodeAudioFrame(inbuf, outbuf, &rc);
+	audio_DecodeReady(outbuf);
 }
