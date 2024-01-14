@@ -36,9 +36,9 @@ void audio_DecodeReady(int16_t *pcm)
 {
 	uint8_t i, idx;
 	for (i = 0; i < AUDIO_BUFFER_NUM; i++) {
-		idx = (audioInfo.outBufferIndex + 1 + i) % AUDIO_BUFFER_NUM;
+		idx = (audioInfo.outBufferIndex + i) % AUDIO_BUFFER_NUM;
 		if (audioInfo.outFlag[idx] == 0) {
-			memcpy(audioInfo.outPcm[idx], pcm, 2*FRAME_SAMPLE_TIMES);
+			memcpy(audioInfo.outPcm[idx], pcm, 2*FRAME_SAMPLE_TIMES);	// ¿ÉÓÅ»¯
 			audioInfo.outFlag[idx] = 1;
 			break;
 		}
@@ -49,11 +49,9 @@ void audio_init(void)
 {
 #if AUDIO_IN_EN == 1
 	HAL_TIM_Base_Start(&htim3);
-	// HAL_ADC_Start_DMA(&hadc1, (void *)audioInfo.inPcm[audioInfo.inBufferIndex], FRAME_SAMPLE_TIMES);
 #endif
 #if AUDIO_OUT_EN == 1
 	HAL_TIM_OC_Start(&htim5, TIM_CHANNEL_1);
-	// HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, (void *)audioInfo.outPcm[audioInfo.outBufferIndex], FRAME_SAMPLE_TIMES, DAC_ALIGN_12B_R);
 #endif
 }
 
@@ -96,6 +94,7 @@ void HAL_DAC_ErrorCallbackCh1(DAC_HandleTypeDef *hdac)
 	static __IO uint32_t error;
 	(void)error;
 	error = HAL_DAC_GetError(hdac);
+	audioInfo.outDmaBusy = 0;
 }
 
 void HAL_DAC_DMAUnderrunCallbackCh1(DAC_HandleTypeDef *hdac)
@@ -103,5 +102,5 @@ void HAL_DAC_DMAUnderrunCallbackCh1(DAC_HandleTypeDef *hdac)
 	static __IO uint32_t error;
 	(void)error;
 	error = HAL_DAC_GetError(hdac);
-	HAL_DAC_Start_DMA(hdac, DAC_CHANNEL_1, (void *)audioInfo.outPcm[audioInfo.outBufferIndex], FRAME_SAMPLE_TIMES, DAC_ALIGN_12B_R);
+	audioInfo.outDmaBusy = 0;
 }
