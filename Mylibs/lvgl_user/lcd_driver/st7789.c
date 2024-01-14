@@ -16,8 +16,8 @@
 #define TAG "st7789"
 
 #define ST7789_USE_RST                (1)
-#define ST7789_NVERT_COLORS           (0)
-#define CONFIG_LV_DISPLAY_ORIENTATION (0)
+#define ST7789_INVERT_COLORS          (1)
+#define CONFIG_LV_DISPLAY_ORIENTATION (1)
 
 /**********************
  *      TYPEDEFS
