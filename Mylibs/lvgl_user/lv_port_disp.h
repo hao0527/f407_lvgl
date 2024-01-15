@@ -18,8 +18,8 @@ extern "C" {
 /*********************
  *      DEFINES
  *********************/
-#define MY_DISP_HOR_RES    128
-#define MY_DISP_VER_RES    160
+#define MY_DISP_HOR_RES    240
+#define MY_DISP_VER_RES    240
 
 /**********************
  *      TYPEDEFS
@@ -38,6 +38,11 @@ void disp_enable_update(void);
 /* Disable updating the screen (the flushing process) when disp_flush() is called by LVGL
  */
 void disp_disable_update(void);
+
+/**********************
+ *   GLOBAL VARIABLES
+ **********************/
+extern lv_disp_drv_t disp_drv;
 
 /**********************
  *      MACROS

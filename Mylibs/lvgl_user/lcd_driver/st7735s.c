@@ -19,6 +19,13 @@
 #define TAG                "ST7735S"
 #define AXP192_I2C_ADDRESS 0x34
 
+#define ST7735S_USE_RST                (1)
+#define ST7735S_INVERT_COLORS          (0)
+#define CONFIG_LV_DISPLAY_ORIENTATION  (0)
+
+#define COLSTART 2    // 根据实际屏幕调整像素偏移
+#define ROWSTART 1
+
 /**********************
  *      TYPEDEFS
  **********************/
@@ -193,7 +200,7 @@ static void st7735s_send_color(void *data, uint16_t length)
 {
 	while(!lv_mcu_spiIsReady());
 	LV_GPIO_SET(ST7735S_DC_PORT, ST7735S_DC_PIN); /*Data mode*/
-	lv_mcu_spiSendData(data, length);
+	lv_mcu_spiSendColor(data, length);
 }
 
 static void st7735s_set_orientation(uint8_t orientation)

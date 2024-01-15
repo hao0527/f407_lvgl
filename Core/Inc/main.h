@@ -36,8 +36,18 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-extern SPI_HandleTypeDef hspi1;
+extern ADC_HandleTypeDef hadc1;
 
+extern DAC_HandleTypeDef hdac;
+extern DMA_HandleTypeDef hdma_dac1;
+
+extern SPI_HandleTypeDef hspi2;
+extern DMA_HandleTypeDef hdma_spi2_tx;
+
+extern TIM_HandleTypeDef htim3;
+extern TIM_HandleTypeDef htim5;
+
+extern UART_HandleTypeDef huart1;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
@@ -68,6 +78,7 @@ void Error_Handler(void);
 #define LCD_DC_GPIO_Port GPIOC
 #define LCD_BL_Pin GPIO_PIN_5
 #define LCD_BL_GPIO_Port GPIOC
+
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
