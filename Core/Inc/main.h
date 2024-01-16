@@ -41,6 +41,7 @@ extern ADC_HandleTypeDef hadc1;
 extern DAC_HandleTypeDef hdac;
 extern DMA_HandleTypeDef hdma_dac1;
 
+extern SPI_HandleTypeDef hspi1;
 extern SPI_HandleTypeDef hspi2;
 extern DMA_HandleTypeDef hdma_spi2_tx;
 
@@ -78,6 +79,12 @@ void Error_Handler(void);
 #define LCD_DC_GPIO_Port GPIOC
 #define LCD_BL_Pin GPIO_PIN_5
 #define LCD_BL_GPIO_Port GPIOC
+#define NRF_CE_Pin GPIO_PIN_6
+#define NRF_CE_GPIO_Port GPIOG
+#define NRF_CS_Pin GPIO_PIN_7
+#define NRF_CS_GPIO_Port GPIOG
+#define NRF_IRQ_Pin GPIO_PIN_8
+#define NRF_IRQ_GPIO_Port GPIOG
 
 /* USER CODE BEGIN Private defines */
 

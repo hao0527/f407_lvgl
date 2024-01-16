@@ -8,7 +8,7 @@
 ***************************************************************************************************/
 void Ci24R1_SPI_WriteByte(uint8_t src)
 {
-	HAL_SPI_Transmit(&hspi3, &src, 1, 1000);
+	HAL_SPI_Transmit(&hspi1, &src, 1, 1000);
 }
 
 /*************************************************************************************************
@@ -20,8 +20,8 @@ void Ci24R1_SPI_WriteByte(uint8_t src)
 uint8_t Ci24R1_SPI_ReadByte(void)
 {
 	uint8_t rxData, txData = 0xff;
-	// HAL_SPI_Receive(&hspi3, &rxData, 1, 1000);
-	HAL_SPI_TransmitReceive(&hspi3, &txData, &rxData, 1, 1000);
+	// HAL_SPI_Receive(&hspi1, &rxData, 1, 1000);
+	HAL_SPI_TransmitReceive(&hspi1, &txData, &rxData, 1, 1000);
 	return rxData;
 }
 
